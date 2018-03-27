@@ -98,6 +98,9 @@ class Canvas(QtWidgets.QWidget):
 
     def selectedVertex(self):
         return self.hVertex is not None
+    
+    def visibleShapes(self):
+        return [s for s in self.shapes if self.isVisible(s)]
 
     def mouseMoveEvent(self, ev):
         """Update line with last point and current coordinates."""
@@ -161,7 +164,7 @@ class Canvas(QtWidgets.QWidget):
         # - Highlight vertex
         # Update shape/vertex fill and tooltip value accordingly.
         self.setToolTip("Image")
-        for shape in reversed([s for s in self.shapes if self.isVisible(s)]):
+        for shape in self.visibleShapes():
             # Look for a nearby vertex to highlight. If that fails,
             # check if we happen to be inside a shape.
             index = shape.nearestVertex(pos, self.epsilon)
@@ -287,8 +290,8 @@ class Canvas(QtWidgets.QWidget):
             index, shape = self.hVertex, self.hShape
             shape.highlightVertex(index, shape.MOVE_VERTEX)
             return
-        for shape in reversed(self.shapes):
-            if self.isVisible(shape) and shape.containsPoint(point):
+        for shape in self.visibleShapes():
+            if shape.containsPoint(point):
                 shape.selected = True
                 self.selectedShape = shape
                 self.calculateOffsets(shape, point)
@@ -384,9 +387,8 @@ class Canvas(QtWidgets.QWidget):
 
         p.drawPixmap(0, 0, self.pixmap)
         Shape.scale = self.scale
-        for shape in self.shapes:
-            if (shape.selected or not self._hideBackround) and \
-                    self.isVisible(shape):
+        for shape in self.visibleShapes():
+            if shape.selected or not self._hideBackround:
                 shape.fill = shape.selected or shape == self.hShape
                 shape.paint(p)
         if self.current:
