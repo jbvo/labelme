@@ -119,6 +119,7 @@ setup(
             'labelme_draw_json=labelme.cli.draw_json:main',
             'labelme_json_to_dataset=labelme.cli.json_to_dataset:main',
             'labelme_on_docker=labelme.cli.on_docker:main',
+            'labelme_json_to_nvidia_digits=labelme.cli.json_to_nvidia_digits:main',
         ],
     },
 )
