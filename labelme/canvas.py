@@ -177,8 +177,9 @@ class Canvas(QtWidgets.QWidget):
                 self.setToolTip("Click & drag to move point")
                 self.setStatusTip(self.toolTip())
                 self.update()
-                break
-            elif shape.containsPoint(pos):
+                return
+        for shape in self.visibleShapes():
+            if shape.containsPoint(pos):
                 if self.selectedVertex():
                     self.hShape.highlightClear()
                 self.hVertex, self.hShape = None, shape
@@ -187,12 +188,12 @@ class Canvas(QtWidgets.QWidget):
                 self.setStatusTip(self.toolTip())
                 self.overrideCursor(CURSOR_GRAB)
                 self.update()
-                break
-        else:  # Nothing found, clear highlights, reset state.
-            if self.hShape:
-                self.hShape.highlightClear()
-                self.update()
-            self.hVertex, self.hShape = None, None
+                return
+        # Nothing found, clear highlights, reset state.
+        if self.hShape:
+            self.hShape.highlightClear()
+            self.update()
+        self.hVertex, self.hShape = None, None
 
     def mousePressEvent(self, ev):
         if PYQT5:
