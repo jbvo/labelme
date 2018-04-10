@@ -38,7 +38,9 @@ class Canvas(QtWidgets.QWidget):
 
     CREATE, EDIT = 0, 1
 
-    epsilon = 11.0
+    @property
+    def epsilon(self):
+        return 11.0 / self.scale
 
     def __init__(self, *args, **kwargs):
         super(Canvas, self).__init__(*args, **kwargs)
